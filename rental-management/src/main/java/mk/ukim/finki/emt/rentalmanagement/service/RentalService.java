@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RentalService {
-    RentalId rent(RentForm rentForm);
+    Rental rent(RentForm rentForm);
     List<Rental> findAll();
 //    List<Rental> findAllByUsername(String username);
-    Optional<Rental> findById(RentalId id);
+    Rental findById(RentalId id);
     void pay(RentalId id, String paymentDetails);
    // Money calculateAmount(Vehicle vehicle, LocalDate start, LocalDate end);
     void deleteRental(RentalId id);

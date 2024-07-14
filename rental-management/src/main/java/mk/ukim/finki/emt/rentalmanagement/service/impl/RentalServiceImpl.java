@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.Validator;
 
 
-import java.time.temporal.ChronoUnit;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,14 +39,14 @@ public class RentalServiceImpl implements RentalService {
 
 
     @Override
-    public RentalId rent(RentForm rentForm) {
+    public Rental rent(RentForm rentForm) {
         Objects.requireNonNull(rentForm,"order must not be null.");
         var constraintViolations = validator.validate(rentForm);
 //        if (constraintViolations.size()>0) {
 //            throw new ConstraintViolationException("The order form is not valid", constraintViolations);
 //        }
-        var newRent= rentalRepository.saveAndFlush(toDomainObject(rentForm));
-        return newRent.getId();
+     return rentalRepository.saveAndFlush(toDomainObject(rentForm));
+
     }
 
     public Rental toDomainObject(RentForm rentForm) {
@@ -71,13 +71,13 @@ public class RentalServiceImpl implements RentalService {
 //    }
 
     @Override
-    public Optional<Rental> findById(RentalId id) {
-        return rentalRepository.findById(id);
+    public Rental findById(RentalId id) {
+        return rentalRepository.findById(id).orElseThrow(()->new RentingNotFoundException(id));
     }
 
     @Override
     public void pay(RentalId id, String paymentDetails) {
-        Rental rental=this.findById(id).orElseThrow(()->new RentingNotFoundException(id));
+        Rental rental=this.findById(id);
         Payment payment=new Payment(rental,paymentDetails);
         rental.pay(payment);
         rentalRepository.saveAndFlush(rental);
@@ -95,7 +95,7 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     public void deleteRental(RentalId id) {
-        Rental rental=this.findById(id).orElseThrow(()->new RentingNotFoundException(id));
+        Rental rental=this.findById(id);
         this.rentalRepository.delete(rental);
     }
 
@@ -110,11 +110,13 @@ public class RentalServiceImpl implements RentalService {
     @Override
     public Money totalAmount(Rental rental, Vehicle vehicle) {
 
+        //TODO
        // Vehicle vehicle = vehicleClient.getVehicle(rental.getVehicleId());
 //        if (vehicle == null) {
 //            throw new IllegalArgumentException("Vehicle not found");
 //        }
-        int numberOfDays = (int) ChronoUnit.DAYS.between(rental.getStartRent(), rental.getEndRent());
-        return vehicle.getDailyPrice().multiply(numberOfDays);
+//        int numberOfDays = (int) ChronoUnit.DAYS.between(rental.getStartRent(), rental.getEndRent());
+//        return vehicle.getDailyPrice().multiply(numberOfDays);
+        return null;
     }
 }
