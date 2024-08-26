@@ -2,12 +2,16 @@ package mk.ukim.finki.emt.usermanagement.domain.models;
 
 import jakarta.persistence.*;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import mk.ukim.finki.emt.sharedkernel.domain.base.AbstractEntity;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name="users")
 @NoArgsConstructor
+@Data
 public class User extends AbstractEntity<UserId> {
 
     @Column(name = "username", nullable = false, unique = true)
@@ -39,6 +43,7 @@ public class User extends AbstractEntity<UserId> {
 
     public User(String username, String password, String name, String email, String phoneNumber,
                 String driverLicenseNumber, Role role) {
+        super(UserId.randomId(UserId.class));
         this.username = username;
         this.password = password;
         this.name = name;

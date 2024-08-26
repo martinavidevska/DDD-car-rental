@@ -17,7 +17,7 @@ import java.util.Optional;
 public interface RentalService {
     Rental rent(RentForm rentForm);
     List<Rental> findAll();
-//    List<Rental> findAllByUsername(String username);
+    List<Rental> findAllByUsername(String username);
     Rental findById(RentalId id);
     void pay(RentalId id, String paymentDetails);
    // Money calculateAmount(Vehicle vehicle, LocalDate start, LocalDate end);

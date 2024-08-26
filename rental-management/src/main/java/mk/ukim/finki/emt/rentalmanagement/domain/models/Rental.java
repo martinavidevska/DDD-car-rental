@@ -43,6 +43,9 @@ public class Rental extends AbstractEntity<RentalId> {
     @AttributeOverride(name="id", column=@Column(name="vehicle_id", nullable=false, length=255))
     private VehicleId vehicleId;
 
+    @AttributeOverride(name="id", column=@Column(name="user_id", nullable=false, length=255))
+    private UserId userId;
+
 
     private LocationId pickedFrom;
 
@@ -57,12 +60,13 @@ public class Rental extends AbstractEntity<RentalId> {
         this.payment=payment;
     }
 
-    public Rental(LocalDate startRent, LocalDate endRent, VehicleId vehicle, LocationId pickedFrom, LocationId returnedTo) {
+    public Rental(LocalDate startRent, LocalDate endRent, VehicleId vehicle, LocationId pickedFrom, LocationId returnedTo,UserId userId) {
         super(RentalId.randomId(RentalId.class));
         this.startRent = startRent;
         this.endRent = endRent;
         this.vehicleId = vehicle;
         this.pickedFrom = pickedFrom;
+        this.userId = userId;
         this.returnedTo = returnedTo;
 
     }

@@ -5,11 +5,13 @@ import mk.ukim.finki.emt.rentalmanagement.domain.exceptions.RentingNotFoundExcep
 import mk.ukim.finki.emt.rentalmanagement.domain.models.*;
 import mk.ukim.finki.emt.rentalmanagement.domain.repository.LocationRepository;
 import mk.ukim.finki.emt.rentalmanagement.domain.repository.RentalRepository;
+import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.User;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.Vehicle;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.VehicleId;
 import mk.ukim.finki.emt.rentalmanagement.service.RentalService;
 import mk.ukim.finki.emt.rentalmanagement.service.forms.LocationForm;
 import mk.ukim.finki.emt.rentalmanagement.service.forms.RentForm;
+import mk.ukim.finki.emt.rentalmanagement.xport.client.UserClient;
 import mk.ukim.finki.emt.rentalmanagement.xport.client.VehicleClient;
 import mk.ukim.finki.emt.sharedkernel.domain.financial.Money;
 import org.springframework.stereotype.Service;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.Validator;
 
 
-
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,12 +31,14 @@ public class RentalServiceImpl implements RentalService {
     private final Validator validator;
     private final RentalRepository rentalRepository;
     private final VehicleClient vehicleClient;
+    private final UserClient userClient;
 
-    public RentalServiceImpl(LocationRepository locationRepository, Validator validator, RentalRepository rentalRepository, VehicleClient vehicleClient) {
+    public RentalServiceImpl(LocationRepository locationRepository, Validator validator, RentalRepository rentalRepository, VehicleClient vehicleClient, UserClient userClient) {
         this.locationRepository = locationRepository;
         this.validator = validator;
         this.rentalRepository = rentalRepository;
         this.vehicleClient = vehicleClient;
+        this.userClient = userClient;
     }
 
 
@@ -55,7 +59,7 @@ public class RentalServiceImpl implements RentalService {
 
 //       Money totalAmount= this.calculateAmount(vehicleId, rentForm.getStartRent(),rentForm.getEndRent());
         return new Rental( rentForm.getStartRent(),rentForm.getEndRent(),
-                vehicleId, rentForm.getPickedFrom(),rentForm.getReturnedTo() );
+                vehicleId, rentForm.getPickedFrom(),rentForm.getReturnedTo(),rentForm.getUserId());
 
     }
 
@@ -65,10 +69,13 @@ public class RentalServiceImpl implements RentalService {
         return this.rentalRepository.findAll();
     }
 
-//    @Override
-//    public List<Rental> findAllByUsername(String username) {
-//        return this.rentalRepository.;
-//    }
+    @Override
+    public List<Rental> findAllByUsername(String username) {
+        return this.rentalRepository.findAllByUserId(
+                this.userClient
+                        .getUserByUsername(username)
+                        .getUserId());
+    }
 
     @Override
     public Rental findById(RentalId id) {
@@ -110,13 +117,16 @@ public class RentalServiceImpl implements RentalService {
     @Override
     public Money totalAmount(Rental rental, Vehicle vehicle) {
 
-        //TODO
-       // Vehicle vehicle = vehicleClient.getVehicle(rental.getVehicleId());
-//        if (vehicle == null) {
-//            throw new IllegalArgumentException("Vehicle not found");
-//        }
-//        int numberOfDays = (int) ChronoUnit.DAYS.between(rental.getStartRent(), rental.getEndRent());
-//        return vehicle.getDailyPrice().multiply(numberOfDays);
-        return null;
+        // Ensure that the vehicle is not null
+        if (vehicle == null) {
+            throw new IllegalArgumentException("Vehicle not found");
+        }
+
+        // Calculate the number of days between the start and end dates of the rental
+        int numberOfDays = (int) ChronoUnit.DAYS.between(rental.getStartRent(), rental.getEndRent());
+
+        // Calculate the total amount by multiplying the daily price of the vehicle by the number of days
+        return vehicle.getDailyPrice().multiply(numberOfDays);
     }
+
 }

@@ -2,6 +2,7 @@ package mk.ukim.finki.emt.rentalmanagement.service.forms;
 
 import lombok.Data;
 import mk.ukim.finki.emt.rentalmanagement.domain.models.LocationId;
+import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.User;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.UserId;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.Vehicle;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.VehicleId;
@@ -26,12 +27,13 @@ public class RentForm {
     @NotNull(message = "Vehicle ID is required")
     private VehicleId vehicleId;
 
+    @NotNull(message = "User ID is required")
+    private UserId userId;
+
     @NotNull(message = "Picked from location is required")
     private LocationId pickedFrom;
 
     @NotNull(message = "Returned to location is required")
     private LocationId returnedTo;
 
-//    @NotNull(message = "User ID is required")
-//    private UserId userId;
 }
