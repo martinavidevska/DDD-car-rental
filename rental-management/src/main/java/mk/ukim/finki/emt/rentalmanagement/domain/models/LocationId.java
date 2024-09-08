@@ -1,10 +1,8 @@
 package mk.ukim.finki.emt.rentalmanagement.domain.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 import mk.ukim.finki.emt.sharedkernel.domain.base.DomainObjectId;
-
-
-
 
 public class LocationId extends DomainObjectId {
 
@@ -17,8 +15,12 @@ public class LocationId extends DomainObjectId {
         super(id);
     }
 
+    @JsonValue
+    public String getId() {
+        return super.getId();
+    }
+
     public static LocationId of(String id) {
         return new LocationId(id);
     }
 }
-

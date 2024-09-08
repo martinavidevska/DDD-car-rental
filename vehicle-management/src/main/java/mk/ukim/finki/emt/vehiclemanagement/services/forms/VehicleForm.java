@@ -16,8 +16,9 @@ public class VehicleForm {
     @NotBlank(message = "License plate cannot be blank")
     private String licensePlate;
 
-    @NotNull(message = "Daily price cannot be null")
-    private Money dailyPrice;
+    private Integer amount;
+
+    private String currency;
 
     @NotBlank(message = "Model cannot be blank")
     private String model;

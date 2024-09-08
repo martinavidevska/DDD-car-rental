@@ -111,8 +111,13 @@ public class RentalServiceImpl implements RentalService {
         Location location1= new Location(locationForm.getName(), locationForm.getCity(), locationForm.getState(), locationForm.getContact());
         locationRepository.save(location1);
         return location1.getId();
-
     }
+
+    @Override
+    public List<Location> findAllLocations() {
+        return  locationRepository.findAll();
+    }
+
 
     @Override
     public Money totalAmount(Rental rental, Vehicle vehicle) {

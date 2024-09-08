@@ -4,11 +4,12 @@ import mk.ukim.finki.emt.usermanagement.domain.models.Role;
 import mk.ukim.finki.emt.usermanagement.domain.models.User;
 import mk.ukim.finki.emt.usermanagement.domain.models.UserId;
 import mk.ukim.finki.emt.usermanagement.service.forms.UserForm;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
     User registerUser(UserForm form);
     User findUserById(UserId userId);
     User findUserByUsername(String username);

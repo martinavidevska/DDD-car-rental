@@ -10,7 +10,7 @@ import mk.ukim.finki.emt.vehiclemanagement.domain.valueobjects.LicensePlate;
 @Table(name="vehicle")
 @Getter
 public class Vehicle extends AbstractEntity<VehicleId> {
-    private LicensePlate licensePlate;
+    private String licensePlate;
 
 
     @AttributeOverrides({
@@ -35,7 +35,7 @@ public class Vehicle extends AbstractEntity<VehicleId> {
         super(VehicleId.randomId(VehicleId.class));
     }
 
-    public Vehicle(LicensePlate licensePlate, Money dailyPrice, String model, String brand, Integer seats, Integer bags, VehicleType vehicleType, String pictureLink) {
+    public Vehicle(String licensePlate, Money dailyPrice, String model, String brand, Integer seats, Integer bags, VehicleType vehicleType, String pictureLink) {
         super(VehicleId.randomId(VehicleId.class));
         this.licensePlate = licensePlate;
         this.dailyPrice = dailyPrice;

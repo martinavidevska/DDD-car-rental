@@ -1,5 +1,6 @@
 package mk.ukim.finki.emt.rentalmanagement.service;
 
+import mk.ukim.finki.emt.rentalmanagement.domain.models.Location;
 import mk.ukim.finki.emt.rentalmanagement.domain.models.LocationId;
 import mk.ukim.finki.emt.rentalmanagement.domain.models.Rental;
 import mk.ukim.finki.emt.rentalmanagement.domain.models.RentalId;
@@ -22,8 +23,8 @@ public interface RentalService {
     void pay(RentalId id, String paymentDetails);
    // Money calculateAmount(Vehicle vehicle, LocalDate start, LocalDate end);
     void deleteRental(RentalId id);
-
     LocationId addLocation(LocationForm locationForm);
+    List<Location> findAllLocations();
     Money totalAmount(Rental rental, Vehicle vehicle);
 
 

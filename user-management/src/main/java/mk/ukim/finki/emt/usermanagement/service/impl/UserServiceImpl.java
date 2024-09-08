@@ -7,6 +7,8 @@ import mk.ukim.finki.emt.usermanagement.domain.models.UserId;
 import mk.ukim.finki.emt.usermanagement.domain.repository.UserRepository;
 import mk.ukim.finki.emt.usermanagement.service.UserService;
 import mk.ukim.finki.emt.usermanagement.service.forms.UserForm;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -44,5 +46,10 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(UserId userId) {
         User user = this.findUserById(userId);
         userRepository.delete(user);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username).orElseThrow(()->new UsernameNotFoundException(username) );
     }
 }

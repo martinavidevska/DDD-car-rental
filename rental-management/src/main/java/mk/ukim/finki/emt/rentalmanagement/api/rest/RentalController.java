@@ -1,8 +1,11 @@
 package mk.ukim.finki.emt.rentalmanagement.api.rest;
 
+import mk.ukim.finki.emt.rentalmanagement.domain.models.Location;
 import mk.ukim.finki.emt.rentalmanagement.domain.models.LocationId;
 import mk.ukim.finki.emt.rentalmanagement.domain.models.Rental;
 import mk.ukim.finki.emt.rentalmanagement.domain.models.RentalId;
+import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.Vehicle;
+import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.VehicleId;
 import mk.ukim.finki.emt.rentalmanagement.service.RentalService;
 import mk.ukim.finki.emt.rentalmanagement.service.forms.LocationForm;
 import mk.ukim.finki.emt.rentalmanagement.service.forms.RentForm;
@@ -14,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/rental")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class RentalController {
 
     public final RentalService rentalService;
@@ -44,10 +48,18 @@ public class RentalController {
         rentalService.deleteRental(id);
         return ResponseEntity.noContent().build();
     }
-    @PostMapping("/location")
+    @PostMapping("/add-location")
     public ResponseEntity<LocationId> addLocation(@RequestBody LocationForm locationForm) {
         LocationId locationId = rentalService.addLocation(locationForm);
         return ResponseEntity.ok(locationId);
+    }
+    @GetMapping("/locations")
+    public List<Location> findAllLocations() {
+        return rentalService.findAllLocations();
+    }
+    @GetMapping("/list-vehicles")
+    public List<Vehicle> listVehicles() {
+        return vehicleClient.findAll();
     }
 
 }

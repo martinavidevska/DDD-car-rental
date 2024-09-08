@@ -7,6 +7,7 @@ import mk.ukim.finki.emt.sharedkernel.domain.financial.Money;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.Map;
 
 
 @Entity
@@ -17,15 +18,18 @@ public class Payment extends AbstractEntity<PaymentId> {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfPayment;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "rental_id")
-    private Rental rental;
+
+    private RentalId rentalId;
 
     private String paymentDetails;
 
-    public Payment(Rental rental, String paymentDetails) {
+    public Payment(RentalId rentalId, String paymentDetails) {
         this.dateOfPayment=LocalDate.now();
-        this.rental = rental;
+        this.rentalId = rentalId;
         this.paymentDetails = paymentDetails;
+    }
+
+    public Payment() {
+
     }
 }

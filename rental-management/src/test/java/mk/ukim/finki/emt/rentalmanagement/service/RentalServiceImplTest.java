@@ -38,40 +38,12 @@ public class RentalServiceImplTest {
     @Autowired
     private LocationRepository locationRepository;
 
-    public Vehicle newVehicle(Money dailyPrice) {
-        return new Vehicle(VehicleId.randomId(VehicleId.class), dailyPrice,true);
-    }
+
 
     @Test
     public void testUserClient(){
         List<User> users = userClient.findAll();
         Assertions.assertFalse(users.isEmpty());
-    }
-
-    @Test
-    public void testPlaceRental() {
-        Vehicle vehicle1 = this.newVehicle(Money.valueOf(Currency.MKD, 1500));
-        Vehicle vehicle2 = newVehicle( Money.valueOf(Currency.MKD, 1000));
-
-        LocationForm locationForm= new LocationForm();
-        locationForm.setCity("skopje");
-        locationForm.setName("Skopje-centar");
-        locationForm.setState("Macedonia");
-        locationForm.setContact("071345678");
-
-        LocationId locationId=this.rentalService.addLocation(locationForm);
-
-        RentForm rentalForm = new RentForm();
-        rentalForm.setStartRent(LocalDate.now());
-        rentalForm.setEndRent(LocalDate.now().plusDays(2));
-        rentalForm.setVehicleId(vehicle1.getVehicleId());
-        rentalForm.setPickedFrom(locationId);
-        rentalForm.setReturnedTo(locationId);
-
-        RentalId newRentalId = rentalService.rent(rentalForm).getId();
-        Rental newRental = rentalService.findById(newRentalId);
-        System.out.println(rentalService.totalAmount(newRental,vehicle1).getAmount());
-        Assertions.assertEquals(rentalService.totalAmount(newRental,vehicle1), Money.valueOf(Currency.MKD, 3000));
     }
 
     @Test

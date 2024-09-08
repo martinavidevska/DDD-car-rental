@@ -2,8 +2,11 @@ package mk.ukim.finki.emt.usermanagement.xport.rest;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import mk.ukim.finki.emt.usermanagement.domain.exceptions.InvalidArgumentsException;
+import mk.ukim.finki.emt.usermanagement.domain.exceptions.PasswordsDoNotMatchException;
 import mk.ukim.finki.emt.usermanagement.domain.models.User;
 import mk.ukim.finki.emt.usermanagement.domain.models.UserId;
+import mk.ukim.finki.emt.usermanagement.service.AuthService;
 import mk.ukim.finki.emt.usermanagement.service.UserService;
 import mk.ukim.finki.emt.usermanagement.service.forms.UserForm;
 import org.springframework.http.HttpStatus;
@@ -15,22 +18,25 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:3000")
 @AllArgsConstructor
 public class UserResource {
 
     private final UserService userService;
+    private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@Valid @RequestBody UserForm userForm) {
+    public String registerUser(@Valid @RequestBody UserForm userForm) {
         try {
-            return ResponseEntity.ok(userService.registerUser(userForm));
-        } catch (Exception e) {
-            e.printStackTrace();  // Log the exception
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+           this.userService.registerUser(userForm);
+           return "redirect:/login";
+        } catch (InvalidArgumentsException | PasswordsDoNotMatchException exception) {
+            return "redirect:/register?error=" + exception.getMessage();
         }
+
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<User> findUserById(@PathVariable UserId id) {
         User user = userService.findUserById(id);
         return ResponseEntity.ok(user);
