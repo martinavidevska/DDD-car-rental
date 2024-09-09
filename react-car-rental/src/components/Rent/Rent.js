@@ -17,10 +17,9 @@ const RentalAdd = (props) => {
     });
 
     useEffect(() => {
-        if (!props.vehicle) {
-            props.findVehicleById(vehicleId); // Fetch vehicle details if not already provided
-        }
+        props.findVehicleById(vehicleId);  // Fetch vehicle details if not already provided
     }, [vehicleId, props]);
+
 
     const handleChange = (e) => {
         setRentData({
@@ -36,8 +35,8 @@ const RentalAdd = (props) => {
         navigate('/');  // Replace '/some-page' with the desired route
     };
 
-     console.log("These are ht loocations", props.locations.id)
     const vehicle = props.vehicle;
+    console.log("the vehicle is", vehicle)
 
     return (
         <div className="rent-container">

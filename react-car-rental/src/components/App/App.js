@@ -53,8 +53,8 @@ class App extends React.Component {
                                     <RentalAdd
                                         onAddRental={this.rentVehicle}
                                         locations={this.state.locations}
-                                        vehicle={this.state.selectedVehicle}
                                         findVehicleById={this.findVehicleById}
+                                        vehicle = {this.state.selectedVehicle}
                                     />
                                 }
                             />
@@ -153,9 +153,22 @@ class App extends React.Component {
 
     findVehicleById = (vehicleId) => {
         VehicleService.fetchVehicleById(vehicleId)
-            .then((data) => {
-                this.setState({ selectedVehicle: data.data });
+            .then((response) => {
+                this.setState({selectedVehicle: response.data});
+                console.log("Vehicle details fetched:", this.state.selectedVehicle);
+            })
+            .catch((error) => {
+                console.error("Error fetching vehicle by ID:", error);
             });
+        // return VehicleService.fetchVehicleById(vehicleId)
+        //     .then((response) => {
+        //         console.log("Vehicle details fetched:", response.data);
+        //         return response.data;
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error fetching vehicle by ID:", error);
+        //         throw error;  // Re-throw the error to handle it where the method is called
+        //     });
     }
 }
 

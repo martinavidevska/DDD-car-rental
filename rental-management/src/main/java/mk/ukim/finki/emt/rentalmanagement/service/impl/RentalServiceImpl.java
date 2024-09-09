@@ -55,12 +55,8 @@ public class RentalServiceImpl implements RentalService {
 
     public Rental toDomainObject(RentForm rentForm) {
         VehicleId vehicleId = rentForm.getVehicleId();
-
-
-//       Money totalAmount= this.calculateAmount(vehicleId, rentForm.getStartRent(),rentForm.getEndRent());
         return new Rental( rentForm.getStartRent(),rentForm.getEndRent(),
                 vehicleId, rentForm.getPickedFrom(),rentForm.getReturnedTo(),rentForm.getUserId());
-
     }
 
 
@@ -84,12 +80,9 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     public void pay(RentalId id, String paymentDetails) {
-        Rental rental=this.findById(id);
-        Payment payment=new Payment(rental,paymentDetails);
-        rental.pay(payment);
-        rentalRepository.saveAndFlush(rental);
-
-
+//        Rental rental=this.findById(id);
+//        Money amount = rental.totalAmount();
+//        Payment payment=new Payment(id,paymentDetails);
     }
 
 //    @Override
@@ -119,18 +112,12 @@ public class RentalServiceImpl implements RentalService {
     }
 
 
-    @Override
-    public Money totalAmount(Rental rental, Vehicle vehicle) {
-
-        // Ensure that the vehicle is not null
+    public Money totalAmount (Rental rental) {
+        Vehicle vehicle = vehicleClient.getVehicle(rental.getVehicleId());
         if (vehicle == null) {
             throw new IllegalArgumentException("Vehicle not found");
         }
-
-        // Calculate the number of days between the start and end dates of the rental
         int numberOfDays = (int) ChronoUnit.DAYS.between(rental.getStartRent(), rental.getEndRent());
-
-        // Calculate the total amount by multiplying the daily price of the vehicle by the number of days
         return vehicle.getDailyPrice().multiply(numberOfDays);
     }
 

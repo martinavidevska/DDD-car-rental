@@ -25,7 +25,7 @@ public interface RentalService {
     void deleteRental(RentalId id);
     LocationId addLocation(LocationForm locationForm);
     List<Location> findAllLocations();
-    Money totalAmount(Rental rental, Vehicle vehicle);
+    Money totalAmount(Rental rental);
 
 
 

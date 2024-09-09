@@ -51,14 +51,6 @@ public class Rental extends AbstractEntity<RentalId> {
 
     private LocationId returnedTo;
 
-    @OneToOne(mappedBy = "rental", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Payment payment;
-
-    @Transient
-    private VehicleClient vehicleClient;
-    public void pay(Payment payment){
-        this.payment=payment;
-    }
 
     public Rental(LocalDate startRent, LocalDate endRent, VehicleId vehicle, LocationId pickedFrom, LocationId returnedTo,UserId userId) {
         super(RentalId.randomId(RentalId.class));
@@ -74,16 +66,6 @@ public class Rental extends AbstractEntity<RentalId> {
     public Rental() {
 
     }
-
-//    public Money totalAmount(){
-//        Vehicle vehicle = vehicleClient.getVehicle(this.vehicleId);
-//        if (vehicle == null) {
-//            throw new IllegalArgumentException("Vehicle not found");
-//        }
-//        int numberOfDays = (int) ChronoUnit.DAYS.between(startRent, endRent);
-//        return vehicle.getDailyPrice().multiply(numberOfDays);
-//    }
-
 
 
 }

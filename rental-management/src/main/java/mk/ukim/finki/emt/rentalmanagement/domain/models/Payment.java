@@ -14,19 +14,20 @@ import java.util.Map;
 @Table(name="payment")
 public class Payment extends AbstractEntity<PaymentId> {
 
-
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dateOfPayment;
-
 
     private RentalId rentalId;
 
     private String paymentDetails;
+    private Money paymentAmount;
 
-    public Payment(RentalId rentalId, String paymentDetails) {
+    public Payment(RentalId rentalId, String paymentMethod, Money paymentAmount) {
+        super(PaymentId.randomId(PaymentId.class));
         this.dateOfPayment=LocalDate.now();
         this.rentalId = rentalId;
-        this.paymentDetails = paymentDetails;
+        this.paymentDetails = paymentMethod;
+        this.paymentAmount = paymentAmount;
     }
 
     public Payment() {
