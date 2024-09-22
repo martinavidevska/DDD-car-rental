@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './vehicleList.css';
 import VehicleFilter from "../Filter/filter";
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const VehicleList = ({vehicles, fetchFilteredVehicles, vehicleTypes}) => {
     const [filteredVehicles, setFilteredVehicles] = useState([]);
@@ -23,7 +24,6 @@ const VehicleList = ({vehicles, fetchFilteredVehicles, vehicleTypes}) => {
 
 
     return (
-
 <div>
         <VehicleFilter
             onFilterSubmit={handleFilterSubmit}
@@ -45,18 +45,19 @@ const VehicleList = ({vehicles, fetchFilteredVehicles, vehicleTypes}) => {
 
                         <ul className="card-list">
                             <li className="card-list-item">
-                                <ion-icon name="people-outline"></ion-icon>
-                                {vehicle.seats} Seats
+                                <i className="fas fa-users"></i> {/* Seats Icon */}
+                                 {vehicle.seats}  Seats
                             </li>
                             <li className="card-list-item">
-                                <ion-icon name="briefcase-outline"></ion-icon>
-                                {vehicle.bags} Bags
+                                <i className="fas fa-suitcase"></i> {/* Bags Icon */}
+                                 {vehicle.bags}  Bags
                             </li>
                             <li className="card-list-item">
-                                <ion-icon name="car-outline"></ion-icon>
-                                {vehicle.vehicleType}
+                                <i className="fas fa-car"></i> {/* Car Icon */}
+                                  {vehicle.vehicleType}
                             </li>
                         </ul>
+
 
                         <div className="card-price-wrapper">
                             <p className="card-price">
@@ -76,8 +77,8 @@ const VehicleList = ({vehicles, fetchFilteredVehicles, vehicleTypes}) => {
         </div>
     </section>
 </div>
-)
-    ;
+    )
+        ;
 };
 
 export default VehicleList;
