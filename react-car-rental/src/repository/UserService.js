@@ -7,12 +7,21 @@ const UserService = {
     fetchUserById: (id) => {
         return userService.get(`/${id}`);
     },
-    addUser: (user) => {
-        return userService.post('/add', user);
+    register: (registerDTO) => {
+        return userService.post('/register', registerDTO);
     },
-    login: (username, password) => {
-        return userService.post('/login', username, password);
+    login: (loginDTO) => {
+        return userService.post("/login", loginDTO);
+    },
+    getUser: () => {
+        return userService.get("/get-user", {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('JWT')}`
+            }
+        });
     }
+
+
 };
 
 export default UserService;

@@ -1,7 +1,11 @@
 import React from 'react';
 import UserService from "../../repository/UserService";
+import {Link, useNavigate} from "react-router-dom";
+import './login.css'
 
 const Login = (props) => {
+
+    const navigate = useNavigate(); // Use for navigation after form submission
 
     const [formData, updateFormData] = React.useState({
         username: "",
@@ -17,9 +21,14 @@ const Login = (props) => {
 
     const onFormSubmit = (e) => {
         e.preventDefault();
-        UserService.login(formData.username, formData.password).then(resp => {
-            localStorage.setItem("JWT", resp.data);
-            props.onLogin()
+        const loginRequest = {
+            username: formData.username,
+            password: formData.password
+        }
+        UserService.login(loginRequest).then(response => {
+            console.log("The response of login", response)
+            localStorage.setItem("JWT", response.data.token);
+            window.location.href = "/"; // Refresh the page after login
         })
 
     }
@@ -49,6 +58,9 @@ const Login = (props) => {
                         />
                     </div>
                     <button id="submit" type="submit" className="btn btn-primary">Submit</button>
+                    <div>
+                        <p>Don't have an account yet?<Link to="/register"><p>Register Here</p> </Link></p>
+                    </div>
                 </form>
             </div>
         </div>

@@ -1,0 +1,80 @@
+.profile {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #f4f4f4;
+}
+
+.container-profile {
+    max-width: 800px;
+    margin: 100px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    text-align: center;
+    color: #3498db;
+}
+
+.profile-info {
+    margin-bottom: 20px;
+    background-color: #f2f2f2;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.profile-info label {
+    display: block;
+    margin: 10px 0 5px;
+    color: black;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.profile-info p {
+    margin: 0;
+    padding: 5px 0;
+    background-color: #3498db;
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.rentals {
+    margin-top: 20px;
+}
+
+.rentals h2 {
+    color: #3498db;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 5px;
+}
+
+.rental-item {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.rental-item img {
+    width: 100%;
+    max-height: 240px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.rental-details p {
+    margin: 5px 0;
+}
+
+.rental-details strong {
+    color: #3498db;
+}

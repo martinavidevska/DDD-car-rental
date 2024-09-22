@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserClient {
@@ -40,19 +41,20 @@ public class UserClient {
         }
     }
 
-    public User getUserById(UserId userId) {
+    public User getUserById() {
         try {
-            return restTemplate.exchange(uri().path("/api/users/{id}").buildAndExpand(userId.getId()).toUri(),
+            return restTemplate.exchange(uri().path("/api/auth/get-user").build().toUri(),
                     HttpMethod.GET, null, new ParameterizedTypeReference<User>() {}).getBody();
         } catch (Exception e) {
             return null;
         }
     }
 
-    public User getUserByUsername(String username) {
+    public UserId getUserByUsername(String username) {
         try {
-            return restTemplate.exchange(uri().path("/api/users/{username}").buildAndExpand(username).toUri(),
-                    HttpMethod.GET, null, new ParameterizedTypeReference<User>() {}).getBody();
+            return Objects.requireNonNull(restTemplate.exchange(uri().path("/api/auth/{username}").buildAndExpand(username).toUri(),
+                    HttpMethod.GET, null, new ParameterizedTypeReference<User>() {
+                    }).getBody()).getUserId();
         } catch (Exception e) {
             return null;
         }

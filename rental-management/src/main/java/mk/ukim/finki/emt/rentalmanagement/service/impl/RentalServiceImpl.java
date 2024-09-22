@@ -6,6 +6,7 @@ import mk.ukim.finki.emt.rentalmanagement.domain.models.*;
 import mk.ukim.finki.emt.rentalmanagement.domain.repository.LocationRepository;
 import mk.ukim.finki.emt.rentalmanagement.domain.repository.RentalRepository;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.User;
+import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.UserId;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.Vehicle;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.VehicleId;
 import mk.ukim.finki.emt.rentalmanagement.service.RentalService;
@@ -45,18 +46,17 @@ public class RentalServiceImpl implements RentalService {
     @Override
     public Rental rent(RentForm rentForm) {
         Objects.requireNonNull(rentForm,"order must not be null.");
-        var constraintViolations = validator.validate(rentForm);
-//        if (constraintViolations.size()>0) {
-//            throw new ConstraintViolationException("The order form is not valid", constraintViolations);
-//        }
      return rentalRepository.saveAndFlush(toDomainObject(rentForm));
 
     }
 
     public Rental toDomainObject(RentForm rentForm) {
-        VehicleId vehicleId = rentForm.getVehicleId();
+        VehicleId vehicleId = new VehicleId(rentForm.getVehicleId());
+        UserId userId = new UserId(rentForm.getUserId());
+        LocationId pickedFrom = new LocationId(rentForm.getPickedFrom());
+        LocationId returnedTo = new LocationId(rentForm.getReturnedTo());
         return new Rental( rentForm.getStartRent(),rentForm.getEndRent(),
-                vehicleId, rentForm.getPickedFrom(),rentForm.getReturnedTo(),rentForm.getUserId());
+                vehicleId, pickedFrom, returnedTo, userId );
     }
 
 
@@ -66,11 +66,8 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public List<Rental> findAllByUsername(String username) {
-        return this.rentalRepository.findAllByUserId(
-                this.userClient
-                        .getUserByUsername(username)
-                        .getUserId());
+    public List<Rental> findAllByUsername(UserId userId) {
+        return this.rentalRepository.findAllByUserId(userId);
     }
 
     @Override

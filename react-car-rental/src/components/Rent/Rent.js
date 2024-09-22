@@ -4,21 +4,24 @@ import './rent.css';
 import { useNavigate } from 'react-router-dom';
 
 
-const RentalAdd = (props) => {
+const RentalAdd = (props ) => {
     const navigate = useNavigate();
+
     const { vehicleId } = useParams(); // Extract vehicleId from route params
     const [rentData, setRentData] = useState({
         startRent: "",
         endRent: "",
         vehicleId: vehicleId,
-        userId: "",
+         userId: props.user.id.id,
         pickedFrom: "",
         returnedTo: ""
     });
 
     useEffect(() => {
-        props.findVehicleById(vehicleId);  // Fetch vehicle details if not already provided
-    }, [vehicleId, props]);
+        props.findVehicleById(vehicleId);
+       const locations = props.locations
+        console.log(locations)// Fetch vehicle details if not already provided
+    }, [vehicleId]);
 
 
     const handleChange = (e) => {
@@ -31,15 +34,22 @@ const RentalAdd = (props) => {
 
     const onFormSubmit = (e) => {
         e.preventDefault();
-        props.onAddRental(rentData);
-        navigate('/');  // Replace '/some-page' with the desired route
+        props.onAddRental(rentData)
+            .then((response) => {
+                const rentalId = response.id.id;
+                console.log("the id of the rental is", response.id.id)// Adjust based on response structure
+                navigate(`/payment/${rentalId}`);
+            })
+            .catch((error) => {
+                console.error("Error while adding rental:", error);
+            });
     };
 
     const vehicle = props.vehicle;
-    console.log("the vehicle is", vehicle)
 
     return (
         <div className="rent-container">
+            <h2 className="section-title">Rent</h2>
             <div className="content-wrapper">
                 <div className="vehicle-info">
                     {vehicle ? (
@@ -52,7 +62,7 @@ const RentalAdd = (props) => {
                                 <p>Price per Day: ${vehicle.dailyPrice.amount} {vehicle.dailyPrice.currency}</p>
                             </div>
                             <div className="vehicle-details-image">
-                                <img src={vehicle.pictureLink} alt={`${vehicle.brand} ${vehicle.model}`} />
+                                <img src={vehicle.pictureLink} alt={`${vehicle.brand} ${vehicle.model}`}/>
                             </div>
                         </div>
                     ) : (
@@ -92,17 +102,17 @@ const RentalAdd = (props) => {
                         {/*        value={rentData.vehicleId} // Display vehicleId from route*/}
                         {/*        readOnly*/}
                         {/*    />*/}
+                        {/*/!*</div>*!/*/}
+                        {/*<div className="form-group">*/}
+                        {/*    <label htmlFor="userId">User ID</label>*/}
+                        {/*    <input*/}
+                        {/*        type="text"*/}
+                        {/*        id="userId"*/}
+                        {/*        name="userId"*/}
+                        {/*        required*/}
+                        {/*        onChange={handleChange}*/}
+                        {/*    />*/}
                         {/*</div>*/}
-                        <div className="form-group">
-                            <label htmlFor="userId">User ID</label>
-                            <input
-                                type="text"
-                                id="userId"
-                                name="userId"
-                                required
-                                onChange={handleChange}
-                            />
-                        </div>
                         <div className="form-group">
                             <label htmlFor="pickedFrom">Picked From</label>
                             <select

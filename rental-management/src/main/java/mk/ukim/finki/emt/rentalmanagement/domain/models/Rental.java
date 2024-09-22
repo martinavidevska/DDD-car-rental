@@ -65,6 +65,7 @@ public class Rental extends AbstractEntity<RentalId> {
 
     public Rental() {
 
+
     }
 
 

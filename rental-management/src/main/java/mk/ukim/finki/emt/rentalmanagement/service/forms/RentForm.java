@@ -25,15 +25,15 @@ public class RentForm {
     private LocalDate endRent;
 
     @NotNull(message = "Vehicle ID is required")
-    private VehicleId vehicleId;
+    private String vehicleId;
 
     @NotNull(message = "User ID is required")
-    private UserId userId;
+    private String userId;
 
     @NotNull(message = "Picked from location is required")
-    private LocationId pickedFrom;
+    private String pickedFrom;
 
     @NotNull(message = "Returned to location is required")
-    private LocationId returnedTo;
+    private String returnedTo;
 
 }

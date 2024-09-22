@@ -4,14 +4,9 @@ import emailImg from "../../assets/img/logo.jpg";
 import profileImgDefault from "../../assets/img/logo.jpg";
 import styles from "./index.module.css";
 
-const Header = () => {
+const Header = ({user, onLogout}) => {
     const [showImg, setShowImg] = useState(profileImgDefault);
-
-    const logoutHandler = () => {
-        // Handle logout functionality if needed
-    };
-
-    return (
+        return (
         <header className="navbar navbar-expand-lg navbar-light bg-white">
             <nav className={`container ${styles["nav-pad"]}`}>
                 <button
@@ -38,21 +33,6 @@ const Header = () => {
                                 <p>Home</p>
                             </Link>
                         </li>
-
-
-
-                        <li className={`nav-item ${styles["nav-item"]}`}>
-                            <Link to="/history?search=&by=id&order=desc" className={`nav-link ${styles["nav-link"]}`}>
-                                <p>History</p>
-                            </Link>
-                        </li>
-
-                        <li className={`nav-item ${styles["nav-item"]}`}>
-                            <Link to="/about" className={`nav-link ${styles["nav-link"]}`}>
-                                <p>About</p>
-                            </Link>
-                        </li>
-
                         {/* New "Add Vehicle" Button */}
                         <li className={`nav-item ${styles["nav-item"]}`}>
                             <Link to="/add-vehicle" className={`nav-link ${styles["nav-link"]}`}>
@@ -60,61 +40,35 @@ const Header = () => {
                             </Link>
                         </li>
 
-                        <React.Fragment>
-                            <li>
-                                <Link to="/">
-                                    <img
-                                        src={emailImg}
-                                        alt="email logo"
-                                        className={styles["email-logo"]}
-                                    />
+                        <li className={`nav-item ${styles["nav-item"]}`}>
+                            <Link to="/login" className={`nav-link ${styles["nav-link"]}`}>
+                                <p>Login</p>
+                            </Link>
+                        </li>
+                        <li className={`nav-item ${styles["nav-item"]}`}>
+                            <Link to="/register" className={`nav-link ${styles["nav-link"]}`}>
+                                <p>Register</p>
+                            </Link>
+                        </li>
+
+
+                        {user && (
+                            <li className={`nav-item ${styles["nav-item"]}`}>
+                                <Link to="/user-profile" className={`nav-link ${styles["nav-link"]}`}>
+                                    <p>Profile</p>
                                 </Link>
                             </li>
-
-                            <li className={`dropdown ${styles["nav-item"]}`}>
-                                <div
-                                    id="navbarDropdown"
-                                    role="button"
-                                    data-bs-toggle="dropdown"
-                                    aria-expanded="false"
-                                >
-                                    <img
-                                        src={showImg}
-                                        alt="profile"
-                                        className={styles["user-profile-img"]}
-                                        onError={(e) => {
-                                            e.onError = null;
-                                            setShowImg(profileImgDefault);
-                                        }}
-                                    />
-                                </div>
-                                <ul
-                                    className="dropdown-menu"
-                                    aria-labelledby="navbarDropdown"
-                                >
-                                    <li>
-                                        <Link to="/edit/profile" className="dropdown-item">
-                                            Edit Profile
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="/help" className="dropdown-item">
-                                            Help
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link to="#" className="dropdown-item" onClick={logoutHandler}>
-                                            Log out
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </li>
-                        </React.Fragment>
+                        )}
+                        <li className={`nav-item ${styles["nav-item"]}`}>
+                            <Link to="/register" className={`nav-link ${styles["nav-link"]}`}>
+                                <button className={`nav-item ${styles["nav-item"]}`} onClick={onLogout}>Logout</button>
+                            </Link>
+                        </li>
                     </ul>
                 </section>
             </nav>
         </header>
-    );
+        );
 };
 
 export default Header;

@@ -1,95 +1,83 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import VehicleService from '../../repository/VehicleService';
-import { Link } from 'react-router-dom';
+import {Link} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './vehicleList.css';
+import VehicleFilter from "../Filter/filter";
 
+const VehicleList = ({vehicles, fetchFilteredVehicles, vehicleTypes}) => {
+    const [filteredVehicles, setFilteredVehicles] = useState([]);
 
-const VehicleList = ({ vehicles, fetchFilteredVehicles, vehicleTypes }) => {
-    const [model, setModel] = useState('');
-    const [dailyPrice, setDailyPrice] = useState('');
-    const [type, setType] = useState('');
+    useEffect(() => {
+        setFilteredVehicles(vehicles);
+    }, [vehicles]);
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        console.log('Submitting filters:', type, model, dailyPrice);
-        fetchFilteredVehicles(type, model, dailyPrice);
+    const handleFilterSubmit = (type, model, dailyPrice) => {
+        fetchFilteredVehicles(type, model, dailyPrice)
+            .then(data => {
+                console.log('Filtered vehicles:', data);
+                setFilteredVehicles(data);
+            })
+            .catch(error => console.error('Error fetching filtered vehicles:', error));
     };
 
+
     return (
-        <div className="container mt-5">
-            <h1 className="text-center mb-4">Vehicles</h1>
 
-            {/* Filter Form */}
-            <form onSubmit={handleSubmit} className="filter-form mb-4">
-                <div className="input-wrapper">
-                    <label htmlFor="vehicleModel" className="input-label">Search by model</label>
-                    <input
-                        type="text"
-                        id="vehicleModel"
-                        className="input-field"
-                        value={model}
-                        onChange={(e) => setModel(e.target.value)}
-                        placeholder="Model"
-                    />
-                </div>
+<div>
+        <VehicleFilter
+            onFilterSubmit={handleFilterSubmit}
+            vehicleTypes={vehicleTypes}
+        />
 
-                <div className="input-wrapper">
-                    <label htmlFor="price" className="input-label">Maximal daily price</label>
-                    <input
-                        type="number"
-                        id="price"
-                        className="input-field"
-                        value={dailyPrice}
-                        onChange={(e) => setDailyPrice(e.target.value)}
-                        placeholder="Amount"
-                    />
-                </div>
+    <section className="section featured-car" id="featured-car">
+        <div className="title-wrapper text-center">
+            <h2 className="section-title">Available cars</h2>
+        </div>
+        <div className="featured-car-list">
+            {filteredVehicles.map(vehicle => (
+                <div key={vehicle.id.id} className="featured-car-card">
+                    <figure className="card-banner">
+                        <img src={vehicle.pictureLink} alt={`${vehicle.model} ${vehicle.brand}`}/>
+                    </figure>
+                    <div className="card-content">
+                        <h3 className="card-title">{vehicle.brand} {vehicle.model}</h3>
 
-                <div className="input-wrapper">
-                    <label htmlFor="vehicleTypeId" className="input-label">Choose a vehicle type</label>
-                    <select
-                        id="vehicleTypeId"
-                        className="input-field"
-                        value={type}
-                        onChange={(e) => setType(e.target.value)}
-                    >
-                        <option value="">All</option>
-                        {vehicleTypes.map((type, index) => (
-                            <option key={index} value={type}>{type}</option>
-                        ))}
-                    </select>
-                </div>
+                        <ul className="card-list">
+                            <li className="card-list-item">
+                                <ion-icon name="people-outline"></ion-icon>
+                                {vehicle.seats} Seats
+                            </li>
+                            <li className="card-list-item">
+                                <ion-icon name="briefcase-outline"></ion-icon>
+                                {vehicle.bags} Bags
+                            </li>
+                            <li className="card-list-item">
+                                <ion-icon name="car-outline"></ion-icon>
+                                {vehicle.vehicleType}
+                            </li>
+                        </ul>
 
-                <button type="submit" className="btn btn-primary">Search</button>
-            </form>
+                        <div className="card-price-wrapper">
+                            <p className="card-price">
+                                {vehicle.dailyPrice.amount} {vehicle.dailyPrice.currency} / day
+                            </p>
+                            <button className="fav-btn">
+                                <ion-icon name="heart-outline"></ion-icon>
+                            </button>
+                        </div>
 
-            <div className="row">
-                {vehicles.map(vehicle => (
-                    <div key={vehicle.id.id} className="col-md-4 mb-4">
-                        <div className="card h-100">
-                            <img src={vehicle.pictureLink} className="card-img-top" alt={"the image"} />
-                            <div className="card-body">
-                                <h5 className="card-title">{vehicle.brand} {vehicle.model}</h5>
-                                <p className="card-text">License Plate: {vehicle.licensePlate.licensePlate}</p>
-                                <p className="card-text">Price per day: {vehicle.dailyPrice.amount} {vehicle.dailyPrice.currency}</p>
-                                <p className="card-text">Seats: {vehicle.seats}</p>
-                                <p className="card-text">Bags: {vehicle.bags}</p>
-                                <p className="card-text">Type: {vehicle.vehicleType}</p>
-                                <div className="text-center mt-3">
-                                    <Link
-                                        className="btn btn-dark"
-                                        to={`/rent/${vehicle.id.id}`}
-                                    >
-                                        Rent
-                                    </Link>
-                                </div>
-                            </div>
+                        <div className="text-center mt-3">
+                            <Link className="btn btn-dark" to={`/rent/${vehicle.id.id}`}>Rent</Link>
                         </div>
                     </div>
-                ))}
-            </div>
+                </div>
+            ))}
         </div>
-    );
-}
+    </section>
+</div>
+)
+    ;
+};
 
 export default VehicleList;

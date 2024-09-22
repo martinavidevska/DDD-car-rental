@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import {BrowserRouter as Router, Navigate, Route, Routes} from 'react-router-dom';
 import './App.css';
 import Header from "../Header/Header";
 import VehicleList from "../VehicleList/VehicleList";
@@ -8,13 +8,18 @@ import AddVehicle from "../AddVehicle/AddVehicle";
 import RentalService from "../../repository/RentalService";
 import RentalAdd from "../Rent/Rent";
 import Login from "../Login/login";
+import Payment from "../Payment/payment";
+import Profile from "../Profile/profile";
+import Register from "../Register/register";
+import UserService from "../../repository/UserService";
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             vehicles: [],
-            users: [],
+            rentals: [],
+            user: null,  // Track the logged-in user
             vehicleTypes: [],
             locations: [],
             selectedVehicle: null,
@@ -24,10 +29,18 @@ class App extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this.fetchData();
+        this.checkForLoggedInUser();
+    }
+
     render() {
         return (
             <Router>
-                <Header />
+                <Header
+                    user = {this.state.user}
+                    onLogout = {this.logout}
+                />
                 <main>
                     <div className="container">
                         <Routes>
@@ -50,17 +63,45 @@ class App extends React.Component {
                             <Route
                                 path="/rent/:vehicleId"
                                 element={
+                                    this.state.user ? (
                                     <RentalAdd
                                         onAddRental={this.rentVehicle}
                                         locations={this.state.locations}
                                         findVehicleById={this.findVehicleById}
-                                        vehicle = {this.state.selectedVehicle}
+                                        vehicle={this.state.selectedVehicle}
+                                        user = {this.state.user}
                                     />
+                                    ) : (
+                                        <Navigate to="/login" />
+                                    )
                                 }
                             />
                             <Route
+                                path="/payment/:rentalId"
+                                element={<Payment
+                                    onAddPayment={this.addPayment}
+                                />}
+                            />
+                            <Route
                                 path="/login"
-                                element={<Login onLogin={this.fetchData} />}
+                                element={<Login onSubmit={this.login}/>}
+                            />
+                            <Route
+                                path="/register"
+                                element={<Register />} // Add the registration route here
+                            />
+                            <Route
+                                path="/user-profile"
+                                element={
+                                    this.state.user ? (
+                                        <Profile
+                                            rentals={this.findRentalsByUser(this.state.user?.id)}
+                                            user={this.state.user}
+                                        />
+                                    ) : (
+                                        <Navigate to="/login" />
+                                    )
+                                }
                             />
                         </Routes>
                     </div>
@@ -69,10 +110,23 @@ class App extends React.Component {
         );
     }
 
-    componentDidMount() {
-        this.fetchData();
-            }
+    checkForLoggedInUser = () => {
+        const token = localStorage.getItem('JWT');
+        console.log("Token found:", token);
+        if (token) {
+            UserService.getUser()
+                .then((response) => {
+                    this.setState({ user: response.data });
+                    console.log("Logged in user details:", response.data);
+                    console.log(" in user details:", this.state.user);
+                })
+                .catch((error) => {
+                    console.error("Error fetching user details:", error);
+                });
+        }
+    };
 
+    // Fetch initial data when the app loads
     fetchData = () => {
         this.loadVehicles();
         this.loadLocations();
@@ -83,8 +137,6 @@ class App extends React.Component {
         VehicleService.fetchVehicles()
             .then((data) => {
                 this.setState({ vehicles: data.data });
-                console.log('Vehicle state after setting:', this.state.vehicles);
-
             })
             .catch((error) => {
                 console.error('Error fetching vehicles:', error);
@@ -94,12 +146,7 @@ class App extends React.Component {
     loadLocations = () => {
         RentalService.fetchLocations()
             .then((response) => {
-                const locations = response.data;
-                if (Array.isArray(locations)) {
-                    this.setState({ locations });
-                } else {
-                    console.error("Fetched locations is not an array:", locations);
-                }
+                this.setState({ locations: response.data });
             })
             .catch((error) => {
                 console.error("Error fetching locations:", error);
@@ -107,22 +154,20 @@ class App extends React.Component {
     }
 
     loadVehicleTypes = () => {
-       VehicleService.fetchVehicleTypes()
-           .then((data) => {
-               this.setState({ vehicleTypes: data.data });
-               console.log('Vehicle types state after setting:', this.state.vehicleTypes);
-
-           })
-           .catch((error) => {
-               console.error('Error fetching vehicle types:', error);
-           });
+        VehicleService.fetchVehicleTypes()
+            .then((data) => {
+                this.setState({ vehicleTypes: data.data });
+            })
+            .catch((error) => {
+                console.error('Error fetching vehicle types:', error);
+            });
     }
 
     fetchFilteredVehicles = (type, model, dailyPrice) => {
-        VehicleService.filterVehicles(type, model, dailyPrice)
+        return VehicleService.filterVehicles(type, model, dailyPrice)
             .then((response) => {
                 this.setState({ vehicles: response.data });
-                console.log("The type is: ", this.state.type);
+                console.log("the new vehicle are", this.state.vehicles);
             })
             .catch((error) => {
                 console.error('Error fetching filtered vehicles:', error);
@@ -130,21 +175,30 @@ class App extends React.Component {
     }
 
     rentVehicle = (rentalForm) => {
-        RentalService.rent(rentalForm)
+        return RentalService.rent(rentalForm)
             .then((response) => {
-                console.log("Rented successfully:", response.data);
-                this.loadVehicles();  // To refresh the list after renting a vehicle
+                return response.data;
             })
             .catch((error) => {
                 console.error("Error renting:", error);
+                throw error;
+            });
+    }
+
+    addPayment = (paymentForm) => {
+        RentalService.addPayment(paymentForm)
+            .then((response) => {
+                console.log("Payment added successfully:", response.data);
+            })
+            .catch((error) => {
+                console.error("Error adding payment:", error);
             });
     }
 
     addVehicle = (vehicleForm) => {
         VehicleService.addVehicle(vehicleForm)
             .then((data) => {
-                console.log("Vehicle added successfully:", data.data);
-                this.loadVehicles();  // To refresh the list after adding a new vehicle
+                this.loadVehicles();
             })
             .catch((error) => {
                 console.error("Error adding vehicle:", error);
@@ -154,22 +208,32 @@ class App extends React.Component {
     findVehicleById = (vehicleId) => {
         VehicleService.fetchVehicleById(vehicleId)
             .then((response) => {
-                this.setState({selectedVehicle: response.data});
-                console.log("Vehicle details fetched:", this.state.selectedVehicle);
+                this.setState({ selectedVehicle: response.data });
             })
             .catch((error) => {
                 console.error("Error fetching vehicle by ID:", error);
             });
-        // return VehicleService.fetchVehicleById(vehicleId)
-        //     .then((response) => {
-        //         console.log("Vehicle details fetched:", response.data);
-        //         return response.data;
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error fetching vehicle by ID:", error);
-        //         throw error;  // Re-throw the error to handle it where the method is called
-        //     });
     }
+
+    findRentalsByUser = (username) => {
+        console.log("The username is", username)
+        return RentalService.fetchRentalsByUser(username)
+            .then((response)=>
+            console.log("The vehicles are",response)
+            )
+            .catch((error) => {
+                console.error("Error fetching rentals by user:", error);
+            });
+    }
+    // logout () => {
+    //     localStorage.removeItem('JWT'); // Remove the token
+    //     this.setState({ user: null }); // Update state
+    // };
+     logout = () => {
+        localStorage.removeItem("JWT"); // Clear the JWT token
+        this.setState({ user: null }); // Update state
+         window.location.href = "/login"; // Redirect to login
+    };
 }
 
 export default App;

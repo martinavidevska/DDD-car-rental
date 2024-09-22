@@ -1,13 +1,13 @@
 package mk.ukim.finki.emt.rentalmanagement.api.rest;
 
-import mk.ukim.finki.emt.rentalmanagement.domain.models.Location;
-import mk.ukim.finki.emt.rentalmanagement.domain.models.LocationId;
-import mk.ukim.finki.emt.rentalmanagement.domain.models.Rental;
-import mk.ukim.finki.emt.rentalmanagement.domain.models.RentalId;
+import mk.ukim.finki.emt.rentalmanagement.domain.models.*;
+import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.UserId;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.Vehicle;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.VehicleId;
+import mk.ukim.finki.emt.rentalmanagement.service.PaymentService;
 import mk.ukim.finki.emt.rentalmanagement.service.RentalService;
 import mk.ukim.finki.emt.rentalmanagement.service.forms.LocationForm;
+import mk.ukim.finki.emt.rentalmanagement.service.forms.PaymentForm;
 import mk.ukim.finki.emt.rentalmanagement.service.forms.RentForm;
 import mk.ukim.finki.emt.rentalmanagement.xport.client.VehicleClient;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +22,12 @@ public class RentalController {
 
     public final RentalService rentalService;
     public final VehicleClient vehicleClient;
+    public final PaymentService  paymentService;
 
-    public RentalController(RentalService rentalService, VehicleClient vehicleClient) {
+    public RentalController(RentalService rentalService, VehicleClient vehicleClient, PaymentService paymentService) {
         this.rentalService = rentalService;
         this.vehicleClient = vehicleClient;
+        this.paymentService = paymentService;
     }
 
     @GetMapping()
@@ -60,6 +62,15 @@ public class RentalController {
     @GetMapping("/list-vehicles")
     public List<Vehicle> listVehicles() {
         return vehicleClient.findAll();
+    }
+    @PostMapping("/payment")
+    private ResponseEntity<Payment> addPayment(@RequestBody PaymentForm paymentForm) {
+        Payment payment = this.paymentService.save(paymentForm);
+        return ResponseEntity.ok(payment);
+    }
+    @GetMapping("/by-user")
+    private ResponseEntity<List<Rental>> getRentalsByUser(@RequestBody UserId userId) {
+        return  ResponseEntity.ok(this.rentalService.findAllByUsername(userId));
     }
 
 }
