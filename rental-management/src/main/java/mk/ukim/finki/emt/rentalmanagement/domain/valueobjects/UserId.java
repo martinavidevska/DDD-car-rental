@@ -2,12 +2,14 @@ package mk.ukim.finki.emt.rentalmanagement.domain.valueobjects;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import jakarta.persistence.Embeddable;
 import mk.ukim.finki.emt.sharedkernel.domain.base.DomainObjectId;
 
 import javax.validation.constraints.NotNull;
 
+@Embeddable
 public class UserId extends DomainObjectId {
-    private UserId() {
+    public UserId() {
         super(UserId.randomId(UserId.class).getId());
     }
 
@@ -16,7 +18,6 @@ public class UserId extends DomainObjectId {
         super(uuid);
     }
 
-    // Factory method
     public static UserId of(String uuid) {
         return new UserId(uuid);
     }

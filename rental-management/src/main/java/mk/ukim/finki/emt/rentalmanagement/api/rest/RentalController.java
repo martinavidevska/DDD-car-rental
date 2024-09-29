@@ -3,7 +3,6 @@ package mk.ukim.finki.emt.rentalmanagement.api.rest;
 import mk.ukim.finki.emt.rentalmanagement.domain.models.*;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.UserId;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.Vehicle;
-import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.VehicleId;
 import mk.ukim.finki.emt.rentalmanagement.service.PaymentService;
 import mk.ukim.finki.emt.rentalmanagement.service.RentalService;
 import mk.ukim.finki.emt.rentalmanagement.service.forms.LocationForm;
@@ -68,9 +67,10 @@ public class RentalController {
         Payment payment = this.paymentService.save(paymentForm);
         return ResponseEntity.ok(payment);
     }
-    @GetMapping("/by-user")
-    private ResponseEntity<List<Rental>> getRentalsByUser(@RequestBody UserId userId) {
-        return  ResponseEntity.ok(this.rentalService.findAllByUsername(userId));
+    @GetMapping("/by-user/{userId}")
+    private ResponseEntity<List<Rental>> getRentalsByUser(@PathVariable String userId) {
+        UserId userIdentifier = UserId.of(userId);
+        return  ResponseEntity.ok(this.rentalService.findAllByUserId(userIdentifier));
     }
 
 }

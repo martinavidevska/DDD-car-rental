@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import VehicleService from '../../repository/VehicleService';
 import {Link} from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './vehicleList.css';

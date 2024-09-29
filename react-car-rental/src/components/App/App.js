@@ -95,7 +95,7 @@ class App extends React.Component {
                                 element={
                                     this.state.user ? (
                                         <Profile
-                                            rentals={this.findRentalsByUser(this.state.user?.id)}
+                                            rentals={this.state.rentals}
                                             user={this.state.user}
                                         />
                                     ) : (
@@ -116,9 +116,18 @@ class App extends React.Component {
         if (token) {
             UserService.getUser()
                 .then((response) => {
-                    this.setState({ user: response.data });
                     console.log("Logged in user details:", response.data);
-                    console.log(" in user details:", this.state.user);
+                    this.setState({ user: response.data }, () => {
+                        // Fetch rentals after setting the user in the state
+                        RentalService.fetchRentalsByUser(this.state.user.id.id)
+                            .then((response) => {
+                                this.setState({ rentals: response.data });
+                                console.log("Fetched rentals:", response.data);
+                            })
+                            .catch((error) => {
+                                console.error("Error fetching rentals:", error);
+                            });
+                    });
                 })
                 .catch((error) => {
                     console.error("Error fetching user details:", error);
@@ -167,10 +176,8 @@ class App extends React.Component {
         return VehicleService.filterVehicles(type, model, dailyPrice)
             .then((response) => {
                 this.setState({ vehicles: response.data });
-                console.log("the new vehicle are", this.state.vehicles);
             })
             .catch((error) => {
-                console.error('Error fetching filtered vehicles:', error);
             });
     }
 
@@ -180,7 +187,6 @@ class App extends React.Component {
                 return response.data;
             })
             .catch((error) => {
-                console.error("Error renting:", error);
                 throw error;
             });
     }
@@ -188,7 +194,6 @@ class App extends React.Component {
     addPayment = (paymentForm) => {
         RentalService.addPayment(paymentForm)
             .then((response) => {
-                console.log("Payment added successfully:", response.data);
             })
             .catch((error) => {
                 console.error("Error adding payment:", error);
@@ -201,7 +206,6 @@ class App extends React.Component {
                 this.loadVehicles();
             })
             .catch((error) => {
-                console.error("Error adding vehicle:", error);
             });
     }
 
@@ -211,20 +215,20 @@ class App extends React.Component {
                 this.setState({ selectedVehicle: response.data });
             })
             .catch((error) => {
-                console.error("Error fetching vehicle by ID:", error);
             });
     }
 
-    findRentalsByUser = (username) => {
-        console.log("The username is", username)
-        return RentalService.fetchRentalsByUser(username)
-            .then((response)=>
-            console.log("The vehicles are",response)
-            )
+    findRentalsByUser = (userId)=> {
+        return RentalService.fetchRentalsByUser(userId)
+            .then((response) => {
+                console.log("The rentals in the are", response.data);
+                return response.data;
+            })
             .catch((error) => {
-                console.error("Error fetching rentals by user:", error);
+                console.error("Error fetching rentals", error);
             });
-    }
+    };
+
     // logout () => {
     //     localStorage.removeItem('JWT'); // Remove the token
     //     this.setState({ user: null }); // Update state

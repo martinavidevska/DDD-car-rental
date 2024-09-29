@@ -7,20 +7,24 @@ import { useNavigate } from 'react-router-dom';
 const RentalAdd = (props ) => {
     const navigate = useNavigate();
 
+
     const { vehicleId } = useParams(); // Extract vehicleId from route params
     const [rentData, setRentData] = useState({
         startRent: "",
         endRent: "",
         vehicleId: vehicleId,
-         userId: props.user.id.id,
+        userId: props.user.id.id,
         pickedFrom: "",
         returnedTo: ""
     });
 
+
     useEffect(() => {
         props.findVehicleById(vehicleId);
        const locations = props.locations
-        console.log(locations)// Fetch vehicle details if not already provided
+        console.log('the user id is', props.user.id)
+        console.log('the user is', props.user)
+        console.log(locations)
     }, [vehicleId]);
 
 
@@ -38,7 +42,7 @@ const RentalAdd = (props ) => {
             .then((response) => {
                 const rentalId = response.id.id;
                 console.log("the id of the rental is", response.id.id)// Adjust based on response structure
-                navigate(`/payment/${rentalId}`);
+                navigate(`/`);
             })
             .catch((error) => {
                 console.error("Error while adding rental:", error);

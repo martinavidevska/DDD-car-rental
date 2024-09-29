@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import {useNavigate, useParams} from 'react-router-dom';
 
 const Payment = (props) => {
-    const rentalId = useParams(); // Assuming rentalId is passed as a prop
-    const navigate = useNavigate(); // Use for navigation after form submission
+    const rentalId = useParams();
+    const navigate = useNavigate();
 
     const [paymentData, setPaymentData] = useState({
         rentalId: rentalId.rentalId,

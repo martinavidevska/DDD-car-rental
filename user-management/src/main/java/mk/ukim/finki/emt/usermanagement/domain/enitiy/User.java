@@ -18,7 +18,7 @@ public class User extends AbstractEntity<UserId> implements UserDetails {
         private String email;
         private String username;
         private String password;
-        private String driverLicenceNumber;
+//        private String driverLicenceNumber;
         private String phoneNumber;
         private String address;
 
@@ -28,7 +28,7 @@ public class User extends AbstractEntity<UserId> implements UserDetails {
                 this.username = username;
                 this.email = email;
                 this.password = password;
-                this.driverLicenceNumber = driverLicenceNumber;
+          //      this.driverLicenceNumber = driverLicenceNumber;
                 this.phoneNumber = phoneNumber;
                 this.address = address;
         }

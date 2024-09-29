@@ -3,19 +3,12 @@ package mk.ukim.finki.emt.rentalmanagement.domain.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.UserId;
-import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.Vehicle;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.VehicleId;
-import mk.ukim.finki.emt.rentalmanagement.xport.client.VehicleClient;
 import mk.ukim.finki.emt.sharedkernel.domain.base.AbstractEntity;
-import mk.ukim.finki.emt.sharedkernel.domain.financial.Currency;
-import mk.ukim.finki.emt.sharedkernel.domain.financial.Money;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.concurrent.TimeUnit;
 
 
 @Entity
@@ -46,9 +39,10 @@ public class Rental extends AbstractEntity<RentalId> {
     @AttributeOverride(name="id", column=@Column(name="user_id", nullable=false, length=255))
     private UserId userId;
 
-
+    @AttributeOverride(name="id", column=@Column(name="picked_from", nullable=false, length=255))
     private LocationId pickedFrom;
 
+    @AttributeOverride(name="id", column=@Column(name="returned_to", nullable=false, length=255))
     private LocationId returnedTo;
 
 

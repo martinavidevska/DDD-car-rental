@@ -66,7 +66,7 @@ public class RentalServiceImpl implements RentalService {
     }
 
     @Override
-    public List<Rental> findAllByUsername(UserId userId) {
+    public List<Rental> findAllByUserId(UserId userId) {
         return this.rentalRepository.findAllByUserId(userId);
     }
 

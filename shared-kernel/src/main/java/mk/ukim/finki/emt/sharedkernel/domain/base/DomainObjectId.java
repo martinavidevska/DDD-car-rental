@@ -24,10 +24,6 @@ public class DomainObjectId implements Serializable {
     public DomainObjectId() {
 
     }
-
-    /**
-     * Creates a new, random instance of the given {@code idClass}.
-     */
     @NonNull
     public static <ID extends DomainObjectId> ID randomId(@NonNull Class<ID> idClass) {
         Objects.requireNonNull(idClass, "idClass must not be null");

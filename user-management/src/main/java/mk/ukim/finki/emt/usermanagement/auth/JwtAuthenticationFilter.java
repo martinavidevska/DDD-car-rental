@@ -89,7 +89,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         }
 
-        filterChain.doFilter(request, response); //doubt hai
+        filterChain.doFilter(request, response);
 
 
     }

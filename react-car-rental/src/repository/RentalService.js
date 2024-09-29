@@ -25,7 +25,7 @@ const RentalService = {
         return rentalService.post('/rental/payment', paymentForm);
     },
     fetchRentalsByUser: (userId) =>{
-        return rentalService.get(`/rental/by-user`, userId );
+        return rentalService.get(`/rental/by-user/${userId}`, userId );
     }
 };
 

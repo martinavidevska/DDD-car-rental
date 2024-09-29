@@ -24,4 +24,5 @@ public class PaymentController {
         Payment payment = this.paymentService.save(paymentForm);
         return ResponseEntity.ok(payment);
     }
+
 }
