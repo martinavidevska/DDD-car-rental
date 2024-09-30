@@ -7,7 +7,7 @@ import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.VehicleId;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class PaymentForm {
+public class  PaymentForm {
 
     @NotNull(message = "Rental ID is required")
     private RentalId rentalId;

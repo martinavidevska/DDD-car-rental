@@ -18,6 +18,9 @@ const RentalService = {
     fetchLocations: () =>{
         return rentalService.get('/rental/locations');
     },
+    fetchLocationById:(locationId) =>{
+        return rentalService.get(`rental/locations/${locationId}`);
+    },
     addLocation: (location) => {
         return rentalService.post('/rental/add-location', location);
     },

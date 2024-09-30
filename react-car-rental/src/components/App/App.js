@@ -12,6 +12,7 @@ import Payment from "../Payment/payment";
 import Profile from "../Profile/profile";
 import Register from "../Register/register";
 import UserService from "../../repository/UserService";
+import ProfileContainer from "../Profile/profileContainer";
 
 class App extends React.Component {
     constructor(props) {
@@ -94,8 +95,8 @@ class App extends React.Component {
                                 path="/user-profile"
                                 element={
                                     this.state.user ? (
-                                        <Profile
-                                            rentals={this.state.rentals}
+                                        <ProfileContainer
+                                            // rentals={this.state.rentals}
                                             user={this.state.user}
                                         />
                                     ) : (

@@ -24,7 +24,7 @@ const RentalAdd = (props ) => {
        const locations = props.locations
         console.log('the user id is', props.user.id)
         console.log('the user is', props.user)
-        console.log(locations)
+        console.log('The locations are', locations)
     }, [vehicleId]);
 
 
@@ -42,7 +42,7 @@ const RentalAdd = (props ) => {
             .then((response) => {
                 const rentalId = response.id.id;
                 console.log("the id of the rental is", response.id.id)// Adjust based on response structure
-                navigate(`/`);
+                navigate(`/payment/${response.id.id}`);
             })
             .catch((error) => {
                 console.error("Error while adding rental:", error);

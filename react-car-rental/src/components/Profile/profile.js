@@ -7,6 +7,7 @@ const Profile = ({ user, rentals = [] }) => {
         <div className="profile">
             <div className="container-profile">
                 <h1>Your Profile</h1>
+               <button> <i className="fa fa-pencil"></i></button>
 
                 <div className="profile-info">
                     <label htmlFor="username">Username:</label>
@@ -21,9 +22,6 @@ const Profile = ({ user, rentals = [] }) => {
                     <label htmlFor="phoneNumber">Phone Number:</label>
                     <p id="phoneNumber">{user.phoneNumber}</p>
 
-                    <label htmlFor="driverLicenseNumber">Driver License Number:</label>
-                    <p id="driverLicenseNumber">{user.driverLicenceNumber}</p>
-
                     <label htmlFor="address">Address:</label>
                     <p id="address">{user.address}</p>
                 </div>
@@ -33,13 +31,15 @@ const Profile = ({ user, rentals = [] }) => {
                     {rentals.length > 0 ? (
                         rentals.map((rent, index) => (
                             <div key={index} className="rental-item">
-                                <img src={rent.pictureLink} alt="Car" loading="lazy" className="w-100"/>
-                                <p><strong>Car :</strong> {rent.brand} {rent.model}</p>
+                                <img src={rent.vehicle.pictureLink} alt="Car" className="w-100"/>
+                                <p><strong>Car:</strong> {rent.vehicle.brand} {rent.vehicle.model}</p>
                                 <p><strong>Start Date:</strong> {rent.startRent}</p>
                                 <p><strong>End Date:</strong> {rent.endRent}</p>
-                                <p><strong>Total Amount:</strong> {rent.totalAmount}</p>
-                                <p><strong>Pick up location:</strong> {rent.addressPickedFrom}</p>
-                                <p><strong>Return location:</strong> {rent.addressReturnedTo}</p>
+                                {/*<p><strong>Total Amount:</strong> {rent.totalAmount}</p>*/}
+                                <p><strong>Pick up
+                                    location:</strong> {rent.pickUpLocation.name}, {rent.pickUpLocation.city}</p>
+                                <p><strong>Return
+                                    location:</strong> {rent.returnLocation.name}, {rent.returnLocation.city}</p>
                             </div>
                         ))
                     ) : (

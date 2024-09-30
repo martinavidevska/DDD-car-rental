@@ -33,7 +33,6 @@ const Header = ({user, onLogout}) => {
                                 <p>Home</p>
                             </Link>
                         </li>
-                        {/* New "Add Vehicle" Button */}
                         <li className={`nav-item ${styles["nav-item"]}`}>
                             <Link to="/add-vehicle" className={`nav-link ${styles["nav-link"]}`}>
                                 <p>Add Vehicle</p>

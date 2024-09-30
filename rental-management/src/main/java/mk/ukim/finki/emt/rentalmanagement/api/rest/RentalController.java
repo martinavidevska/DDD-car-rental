@@ -1,6 +1,7 @@
 package mk.ukim.finki.emt.rentalmanagement.api.rest;
 
 import mk.ukim.finki.emt.rentalmanagement.domain.models.*;
+import mk.ukim.finki.emt.rentalmanagement.domain.repository.LocationRepository;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.UserId;
 import mk.ukim.finki.emt.rentalmanagement.domain.valueobjects.Vehicle;
 import mk.ukim.finki.emt.rentalmanagement.service.PaymentService;
@@ -8,6 +9,7 @@ import mk.ukim.finki.emt.rentalmanagement.service.RentalService;
 import mk.ukim.finki.emt.rentalmanagement.service.forms.LocationForm;
 import mk.ukim.finki.emt.rentalmanagement.service.forms.PaymentForm;
 import mk.ukim.finki.emt.rentalmanagement.service.forms.RentForm;
+import mk.ukim.finki.emt.rentalmanagement.service.impl.LocationService;
 import mk.ukim.finki.emt.rentalmanagement.xport.client.VehicleClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +24,13 @@ public class RentalController {
     public final RentalService rentalService;
     public final VehicleClient vehicleClient;
     public final PaymentService  paymentService;
+    private final LocationService locationService;
 
-    public RentalController(RentalService rentalService, VehicleClient vehicleClient, PaymentService paymentService) {
+    public RentalController(RentalService rentalService, VehicleClient vehicleClient, PaymentService paymentService, LocationService locationService) {
         this.rentalService = rentalService;
         this.vehicleClient = vehicleClient;
         this.paymentService = paymentService;
+        this.locationService = locationService;
     }
 
     @GetMapping()
@@ -54,6 +58,12 @@ public class RentalController {
         LocationId locationId = rentalService.addLocation(locationForm);
         return ResponseEntity.ok(locationId);
     }
+    @GetMapping("/locations/{locationId}")
+    public ResponseEntity<Location> findLocationById(@PathVariable String locationId) {
+        LocationId id = new LocationId(locationId);
+        return ResponseEntity.ok(locationService.findById(id));
+
+    }
     @GetMapping("/locations")
     public List<Location> findAllLocations() {
         return rentalService.findAllLocations();
@@ -69,7 +79,7 @@ public class RentalController {
     }
     @GetMapping("/by-user/{userId}")
     private ResponseEntity<List<Rental>> getRentalsByUser(@PathVariable String userId) {
-        UserId userIdentifier = UserId.of(userId);
+        UserId userIdentifier = new UserId(userId);
         return  ResponseEntity.ok(this.rentalService.findAllByUserId(userIdentifier));
     }
 
